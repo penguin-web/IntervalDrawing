@@ -4,7 +4,7 @@
 
 # 必要な手順
 **!!!!１．右にあるReleasesからInterval Drawingを開き，IntervalDrawing.exeをダウンロードする!!!!!**
-２．好きな場所（Cドライブ>ユーザー>(ユーザー名)以下が望ましい）に展開する
+２．好きな場所（Cドライブ>ユーザー>(ユーザー名)以下が望ましい）に展開する.
 ３．ChromeDriverをダウンロードする（Google Chromeのページの右上の縦3点→ヘルプ→Google Chromeについて　と移動すると，バージョンが確認できる．これを記録し，次に[公式ページ](https://chromedriver.chromium.org/downloads)から，先ほど記録したChromeのバージョンよりも古い中で最も新しいバージョンのChromeDriverをダウンロードする.windowsの場合はchromedriver_win32.zip）
 ４．ZIPを解凍し，先ほど展開したフォルダの中に入れる．
 ５．Excelファイルを新しく作成し，適当な名前を付ける．
