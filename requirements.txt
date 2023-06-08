@@ -1,0 +1,5 @@
+requests
+selenium
+opencv-python
+openpyxl
+pywin32

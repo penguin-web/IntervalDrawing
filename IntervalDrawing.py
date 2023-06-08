@@ -20,6 +20,8 @@ import threading
 import win32gui
 import numpy as np
 import tkinter as tk
+import csv
+import queue
 
 
 
@@ -41,6 +43,7 @@ img_urls_previous = []
 miss_num = 0
 missing_count = 0
 word_column = 0
+
 
 def search_xlsx():
     for file in os.listdir():
@@ -83,7 +86,8 @@ def get_urls(driver):#chromeから画像のurlをexcelに保存 #countの他も�
     count = 0#漏れがあったら飛ばせるようにするindex
     index = 0#excel保存用のindex
     while(True):
-        tmb_imgs = driver.find_elements(by=By.XPATH, value='//img')
+        xpath = "//img"
+        tmb_imgs = driver.find_elements(by=By.XPATH, value=xpath)
         tmb_alts = [tmb.get_attribute('alt') for tmb in tmb_imgs]
         for tmb_img,tmb_alt in zip(tmb_imgs, tmb_alts):
             try:
@@ -169,7 +173,6 @@ def show_img_from_url_at_random(img_urls,n):
                 thickness=2,
                 lineType=cv2.LINE_AA
             )
-
             cv2.imshow("img",open_img_resize)
             cv2.moveWindow("img", move_window_x,move_window_y)
             img_find = win32gui.FindWindow(None, 'img')
@@ -180,10 +183,7 @@ def show_img_from_url_at_random(img_urls,n):
             t = False
             print("0:00",end="")
             for i in range(int(interv*60/TIMER_INTERVAL)):
-                if i%6==0:#?:00の形にする
-                    print(f"\r{divmod(i+1,6)[0]}:{divmod(i+1,6)[1]*TIMER_INTERVAL}0", end="")
-                else:
-                    print(f"\r{divmod(i+1,6)[0]}:{divmod(i+1,6)[1]*TIMER_INTERVAL}", end="")
+                
 
                 k = cv2.waitKey(TIMER_INTERVAL*1000) 
                 if k != -1:
@@ -192,7 +192,11 @@ def show_img_from_url_at_random(img_urls,n):
                         break
                     else:
                         break
-                
+                if i%6==5:#?:00の形にする
+                    print(f"\r{divmod(i+1,6)[0]}:{divmod(i+1,6)[1]*TIMER_INTERVAL}0", end="")
+                else:
+                    print(f"\r{divmod(i+1,6)[0]}:{divmod(i+1,6)[1]*TIMER_INTERVAL}", end="")
+
             print("")
             if t==True:
                 break
@@ -211,6 +215,45 @@ def show_img_from_url_at_random(img_urls,n):
             missing_count = missing_count+1
             if missing_count > 5:
                 break
+seconds =0
+minutes =0
+
+def timer():
+    root = tk.Tk()
+
+    # Set window title 
+    root.title("Stopwatch") 
+
+    # Set window size 
+    root.geometry("220x70") 
+
+    # Define global variables
+
+    # Function to increase stopwatch time by one second
+    def increment_time(): 
+        global seconds 
+        global minutes 
+        # Increase seconds 
+        seconds += 1
+        # When seconds reach 60, increase minutes 
+        if seconds == 60: 
+            minutes += 1
+            seconds = 0
+        # Display updated time 
+        stopwatch.config(text = "{}:{}".format(minutes, seconds))
+        # Call the increment_time function after 1 second
+        stopwatch.after(1000, increment_time) 
+
+    # Create a label to display the stopwatch 
+    stopwatch = tk.Label(root, text = "0:0", font = ("Arial Bold", 20)) 
+    stopwatch.pack()
+
+    # Call the increment_time function 
+    stopwatch.after(1000, increment_time) 
+
+    # Start the main event loop
+    root.mainloop()
+
 
 def show_img_from_url(img_urls,n):
     print("You can finish this pragram if you input \"q\"")
@@ -278,6 +321,7 @@ def get_img_coordinate():
 
 
 if __name__ == "__main__":
+    
     try:
         exfile = search_xlsx()
         print("Excel file:", end = "")
@@ -371,6 +415,7 @@ if __name__ == "__main__":
                     continue
                 print("Setup is complete")
                 img_urls_previous = collect_img_urls_previous(num,word)
+                
                 show_img_from_url(img_urls_previous,num)
                 break
             elif get_or_show == "a":
@@ -384,8 +429,7 @@ if __name__ == "__main__":
     except Exception as e:
         print("Error: ", end = "")
         print(e)
+
+
     
-
-
-
-
+    
